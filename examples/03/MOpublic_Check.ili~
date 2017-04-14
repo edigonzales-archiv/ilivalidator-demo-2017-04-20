@@ -1,0 +1,21 @@
+INTERLIS 2.3;
+
+CONTRACTED MODEL MOpublic95_ili2_v13_Check (en) AT "http://sogeo.services"
+  VERSION "2017-04-14" =
+  IMPORTS MOpublic95_ili2_v13;
+ 
+  VIEW TOPIC Control_points =
+  DEPENDS ON MOpublic95_ili2_v13.Control_points;
+
+    VIEW v_Control_point
+    	PROJECTION OF MOpublic95_ili2_v13.Control_points.Control_point;
+    =
+      ALL OF Control_point;
+      
+      MANDATORY CONSTRAINT (INTERLIS.len (Number)) == 8;
+    
+      END v_Control_point;
+    
+  END Control_points;
+
+END MOpublic95_ili2_v13_Check.

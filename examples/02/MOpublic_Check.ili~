@@ -1,0 +1,28 @@
+INTERLIS 2.3;
+
+CONTRACTED MODEL AVLight_Check (en) AT "http://sogeo.services"
+  VERSION "2017-04-07" =
+  IMPORTS AVLight;
+  IMPORTS SO_FunctionsExt;
+ 
+  VIEW TOPIC Control_points_Check =
+  DEPENDS ON AVLight.Control_points;
+
+    VIEW v_Control_point
+    	PROJECTION OF AVLight.Control_points.Control_point;
+    =
+      ALL OF Control_point;
+      !! Constraint name will not be shown if ilivalid.msg is defined!?
+      !!@ name = Punktnummer_Laenge
+      !!@ ilivalid.msg = "Laenge der Punktenummer {Number} ist falsch. Erwartet wird 8."
+      MANDATORY CONSTRAINT (INTERLIS.len (Number)) == 8;
+      !!@ ilivalid.msg = "Laenge der BfS-Nummer {FOSNr} ist falsch. Erwartet wird 4."
+      !!MANDATORY CONSTRAINT (INTERLIS.len (FOSNr)) == 4;
+      !!@ name = BfS_Nummer_erste_Ziffer
+      !!@ ilivalid.msg = "Erste Ziffer der BfS-Nummer {FOSNr} ist falsch. Erwartet wird 2."
+      MANDATORY CONSTRAINT SO_FunctionsExt.mySubText(FOSNr,"0","1") == "2";
+    END v_Control_point;
+    
+  END Control_points_Check;
+
+END AVLight_Check.

@@ -1,0 +1,6 @@
+["MOpublic95_ili2_v13.Control_points.Control_point.Geom_alt"]
+type="off"
+
+["MOpublic95_ili2_v13.Control_points.Control_point.IdentND"]
+multiplicity="warning"
+msg="NBIdent fehlt."
