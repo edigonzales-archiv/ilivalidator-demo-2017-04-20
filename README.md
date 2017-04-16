@@ -173,7 +173,9 @@ Es muss natürlich nicht immer gleich ein Webservice sein den man anzapft. In vi
 * `SET CONSTRAINT WHERE ...`
 * `BAG/LIST OF` (siehe `GB2AV`)
 * Vererbungen (bereits angetestet mit `GB2AV`)
+* isInteger: "mit Pfad"
 * Bedingungen aus assozierten Objekten: Nutzungstyp ist in Klasse A erfasst. Geometrie in Klasse B. Assoziation zwischen beiden Klassen. Prüfung auf Areas für typ="XXX"
+* elementCount(): von typ=XX darf es genau YY Elemente haben.
 
 
 
