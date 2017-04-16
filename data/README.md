@@ -20,6 +20,9 @@ psql -d xanadu2 -f lcsurface.sql
 psql -d xanadu2 -f lcsurface_proj.sql
 
 psql -d xanadu2 -f lcsurface_proj_update_date.sql
+
+# needs postext class too
+#psql -d xanadu2 -f realestate.sql
 ```
 
 ## MOpublic exportieren

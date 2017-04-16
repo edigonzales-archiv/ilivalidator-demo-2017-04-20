@@ -1,0 +1,10 @@
+INTERLIS 2.3;
+
+CONTRACTED MODEL SO_FunctionsExt (en) AT "http://sogeo.services"
+  VERSION "2017-04-14" =
+
+  FUNCTION mySubText (text: TEXT; from: NUMERIC; to: NUMERIC): TEXT;
+  FUNCTION ageYears (date: TEXT): NUMERIC;
+  FUNCTION check4GWR (egid: NUMERIC): BOOLEAN;
+
+END SO_FunctionsExt.

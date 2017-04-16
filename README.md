@@ -5,7 +5,7 @@
 * Kurzintro _ilivalidator_
 * Eigene (strengere) Bedingungen
 * Eigene Funktionen (Custom Functions)
-* <s>Eigene Funktionen programmieren lernen.</s>
+* <s>Programmieren von eigenen Funktionen.</s>
 * <s>Alle Antworten auf eure Fragen.</s>
 
 ## Kurzintro _ilivalidator_
@@ -105,11 +105,75 @@ java -jar ../apps/ilivalidator-master/ilivalidator.jar --config ../examples/03/m
 
 Resultat sieht doch schon besser aus.
 
+Im MOpublic-Datenmodell sind die typischen AREA-Geometrien &laquo;nur&raquo; noch SURFACE-Geometrien. Will man jetzt doch prüfen, ob sich die Geometrien einiger Klassen nicht überlappen, kann man die `INTERLIS.areAreas()`-Funktion verwenden:
+ 
+```
+SET CONSTRAINT INTERLIS.areAreas(ALL, UNDEFINED, >> Geometry);
+```
 
+Die Prüfung ohne diesen zusätzlichen Constraint liefert keinen Fehler in den Daten.
 
-## Weitere Informationen
-* Doku
-* iox/ili test-ilis...
+```
+java -jar ../apps/ilivalidator-master/ilivalidator.jar  ../examples/04/mopublic_overlap_surface.xtf
+```
+
+Jetzt mit zusätzlichen Constraint in unserem Check-Modell. Dafür muss man wieder die Konfigurationsdatei mitliefern.
+
+```
+java -jar ../apps/ilivalidator-master/ilivalidator.jar  --config ../examples/04/mopublic.toml ../examples/04/mopublic_overlap_surface.xtf
+```
+
+Upsi... Nach ein paar Minuten wird kein Fehler gefunden -> [Bug](https://github.com/claeis/ilivalidator/issues/50) im Programm.
+
+Mit den INTERLIS-Standardfunktionen und Views kommt man schon relativ weit, wenn man strengere Bedingungen formulieren und prüfen will. Es lohnt sich das Kapitel 2.14 und 2.15 des Referenzhandbuches zu lesen und vor allem die [Beispiel-Modelle](https://github.com/claeis/iox-ili/tree/master/src/test/data/validator) für die Tests von ilivalidator resp. iox-ili. Anhand der Beispiele bekommt man sofort ein Gefühl, was bereits geht resp. was möglich ist.
+
+## Eigene Funktionen (Custom Functions)
+
+Was aber wenn die Standardfunktionen nicht mehr reichen? Oder wenn man die zu prüfenden Daten mit Referenzdaten vergleichen will? 
+
+Man kann _ilivalidator_ beliebig erweitern, indem  man selber Java-Klassen schreibt. Konkret muss man ein bestimmtes [Interface](https://github.com/claeis/iox-ili/blob/master/src/main/java/ch/interlis/iox_j/validator/InterlisFunction.java) implementieren.
+
+Jede Funktion erhält einen qualifizierten INTERLIS-Namen. Das heisst jetzt nicht, dass die Funktion nur für ein Modell funktionert, sondern man macht sich ein Funktions-Modell und importiert das jeweils in sein Check-Modell, wenn man eine bestimmte Funktion braucht. 
+
+### Eigene Funktion
+In der amtlichen Vermessung verwalten wir die projektierten Gebäude. Ist so ein Eintrag älter als drei Jahre (und dementsprechend keine richtiges Gebäude gebaut), wollen wir dieses projektierte Gebäude wieder aus dem Datensatz entfernt haben. Wir brauchen nun eine Funktion, die das Erfassungsdatum (das im AV-Datensatz geführt wird) mit dem Datum von heute vergleichen und einen Fehler melden, falls die Differenz grösser drei Jahre ist.
+
+Gesagt, getan: [AgeYearsIoxPlugin.java](https://git.sogeo.services/stefan/ilivalidator-extensions/src/e6ef0a6ff2bd15f0449451c5978906026d9a1f7a/src/ilivalidator-extensions/src/main/java/org.catais.ilivalidator.ext/AgeYearsIoxPlugin.java)
+
+Die Java-Klassen müssen jetzt von _ilivalidator_ gefunden werden. Standardmässig sucht _ilivalidator_ in einem `plugins`-Verzeichnis in dem Applikationsverzeichnis.
+
+In unserem Check-Modell muss ich, wie bereits erwähnt, mein Funktions-Modell importieren. Anschliessend natürlich den Constraint definieren.
+
+Das Resultat des folgenden Aufrufs listet ein projektiertes Gebäude auf, das älter als drei Jahre ist:
+
+```
+java -jar ../apps/ilivalidator-master/ilivalidator.jar  --config ../examples/05/mopublic.toml ../examples/05/mopublic_overlap_surface.xtf
+```
+
+### Vergleich mit Referenzdaten
+Momentan trendy sind Abgleiche zwischen der amtlichen Vermessung und dem GWR. In beiden Registern wird der EGID verwaltet. Das ist auch gleichbedeutent mit Widersprüchen. Dank der Erweiterbarkeit kann ich mir jetzt ein INTERLIS-Funktion schreiben, die jeden EGID aus den Daten der amtlichen Vermessung mit einem Referenzdatensatz vergleicht. Nehmen wir mal an - rein hypothetisch -, dass dieser Referenzdatensatz der GWR ist. Am einfachsten gelangt mit mit der swisstopo API an diese Daten. Ist natürlich nicht wirklich das Gelbe vom Ei aber für die Demo reicht es:
+ 
+* [Dokumentation / Beschreibung](https://api3.geo.admin.ch/services/sdiservices.html#find)
+* [Beispiel-Request](https://api3.geo.admin.ch/rest/services/api/MapServer/find?layer=ch.bfs.gebaeude_wohnungs_register&searchText=367267&searchField=egid&returnGeometry=false&contains=false)
+
+Programmiert war die neue [INTERLIS-Funktion](https://git.sogeo.services/stefan/ilivalidator-extensions/src/112388c2fbd21466896b78f1cf27390259ae0985/src/ilivalidator-extensions/src/main/java/org.catais.ilivalidator.ext/Check4GWRIoxPlugin.java) rasch. Tricky war hingegen, dass sie zusätzlichen Java-Bibliotheken benötig. _ilivalidator_ muss diese beim Verwenden der Funktion auch finden. Aus diesem Grund muss der Programmaufruf anders sein:
+
+```
+java -cp  '../apps/ilivalidator-master/ilivalidator.jar:../apps/ilivalidator-master/libs/*:../apps/ilivalidator-master/plugins/*' org.interlis2.validator.Main --config ../examples/06/mopublic.toml  ../examples/06/mopublic_missing_egid.xtf
+```
+
+Ich hoffe, dass das grundstätzlich noch eleganter geht. Das Check- und Funktions-Modell habe ich bereits angepasst. Die Prüfung meldet einen unbekannten EGID in den Daten der amtlichen Vermessung.
+
+**ACHTUNG:** Nur zu Testzwecken verwenden. Nicht für die Produktion.
+
+Es muss natürlich nicht immer gleich ein Webservice sein den man anzapft. In vielen Fällen dürfte es wahrscheinlich eine lokale Datei und/oder eine Datenbank sein.
+
+## TODO / Ausprobieren / Testen / Überlegen
+* Sauberes Logging aus den Custom Functions.
+* `SET CONSTRAINT WHERE ...`
+* `BAG/LIST OF` (siehe `GB2AV`)
+* Vererbungen (bereits angetestet mit `GB2AV`)
+* Bedingungen aus assozierten Objekten: Nutzungstyp ist in Klasse A erfasst. Geometrie in Klasse B. Assoziation zwischen beiden Klassen. Prüfung auf Areas für typ="XXX"
 
 
 

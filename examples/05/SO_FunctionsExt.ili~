@@ -1,0 +1,8 @@
+INTERLIS 2.3;
+
+CONTRACTED MODEL SO_FunctionsExt (en) AT "http://sogeo.services"
+  VERSION "2017-04-09" =
+
+  FUNCTION mySubText (text: TEXT; from: NUMERIC; to: NUMERIC): TEXT;
+
+END SO_FunctionsExt.

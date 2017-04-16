@@ -1,0 +1,60 @@
+INTERLIS 2.3;
+
+CONTRACTED MODEL MOpublic95_ili2_v13_Check (en) AT "http://sogeo.services"
+  VERSION "2017-04-14" =
+  IMPORTS MOpublic95_ili2_v13;
+  IMPORTS SO_FunctionsExt;
+ 
+  VIEW TOPIC Control_points =
+  DEPENDS ON MOpublic95_ili2_v13.Control_points;
+
+    VIEW v_Control_point
+    	PROJECTION OF MOpublic95_ili2_v13.Control_points.Control_point;
+    =
+      ALL OF Control_point;
+
+      !!@ name = Punktnummer_Laenge
+      !!@ ilivalid.msg = "Laenge der Punktenummer {Number} ist falsch. Erwartet wird 8."
+      MANDATORY CONSTRAINT (INTERLIS.len (Number)) == 8;
+      
+      END v_Control_point;
+  
+  END Control_points;
+
+  
+  VIEW TOPIC Land_cover =
+  DEPENDS ON MOpublic95_ili2_v13.Land_cover;
+  
+  	VIEW v_LCSurface
+    	PROJECTION OF MOpublic95_ili2_v13.Land_cover.LCSurface;
+    =
+      ALL OF LCSurface;
+  
+      !! !!@ name = LCSurface_Areas
+      !! !!@ ilivalid.msg = "Die Geometrien der Bodenbedeckung duerfen sich nicht ueberlappen."      
+      !!MANDATORY CONSTRAINT INTERLIS.areAreas(>v_LCSurface, UNDEFINED, >> Geometry);
+      !! very slow
+      !!SET CONSTRAINT INTERLIS.areAreas(ALL, UNDEFINED, >> Geometry);
+      
+      !!@ name = LCSurface_Egid
+      !!@ ilivalid.msg = "EGID {RegBL_EGID} wurde im GWR nicht gefunden."            
+      MANDATORY CONSTRAINT SO_FunctionsExt.check4GWR(RegBL_EGID);
+      
+    END v_LCSurface;
+    
+  	VIEW v_LCSurfaceProj
+    	PROJECTION OF MOpublic95_ili2_v13.Land_cover.LCSurfaceProj;
+    =
+      ALL OF LCSurfaceProj;
+      
+      !!@ name = LCSurfaceProj_Age
+      !!@ ilivalid.msg = "Projektierte Gebaeude duerfen hoechstens 3 Jahre alt sein."      
+      MANDATORY CONSTRAINT SO_FunctionsExt.ageYears(State_of) <= 3;
+      
+    END v_LCSurfaceProj;    
+  
+  END Land_cover;
+      
+
+  
+END MOpublic95_ili2_v13_Check.
