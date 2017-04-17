@@ -46,7 +46,7 @@ Resultat auf Konsole: `Info: ...validation done`
 Prüfung einer INTERLIS-Transferdatei *mit* Fehler:
 
 ```
-java -jar ../apps/ilivalidator-master/ilivalidator.jar ../examples/01/mopublic_error.xtf
+java -jar ../apps/ilivalidator-master/ilivalidator.jar ../examples/01/mopublic_errors.xtf
 ```
 
 Resultat auf Konsole: `Info: ...validation failed`. Der eigentliche Fehler wird auch in der Konsole ausgegeben: Zeilenummer in XTF-Datei und TID.
@@ -54,13 +54,13 @@ Resultat auf Konsole: `Info: ...validation failed`. Der eigentliche Fehler wird 
 Mit `--log` kann in eine Log-Datei geschrieben werden. Mit `--xtflog` kann in eine sehr einfach gehaltene [INTERLIS-Logdatei](http://models.interlis.ch/models/tools/IliVErrors.ili) geschrieben werden (inkl. Lokalisation des Fehlers):
 
 ```
-java -jar ../apps/ilivalidator-master/ilivalidator.jar --xtflog error_log.xtf ../examples/01/mopublic_error.xtf
+java -jar ../apps/ilivalidator-master/ilivalidator.jar --xtflog error_log.xtf ../examples/01/mopublic_errors.xtf
 ```
 
 Fehler können zu Warnungen heruntergestuft werden oder komplett ausgeschaltet werden. Gesteuert über eine Konfigurationsdatei und Parameter `--config`:
 
 ```
-java -jar ../apps/ilivalidator-master/ilivalidator.jar --config ../examples/01/mopublic.toml ../examples/01/mopublic_error.xtf
+java -jar ../apps/ilivalidator-master/ilivalidator.jar --config ../examples/01/mopublic.toml ../examples/01/mopublic_errors.xtf
 ```
 
 
@@ -92,7 +92,7 @@ java -jar ../apps/ili2c-4.7.2/ili2c.jar ../examples/02/MOpublic_Check.ili
 In der [Konfigurationsdatei](examples/02/mopublic.toml) muss noch das zusätzliche Modell registriert werden. Der Programmaufruf ist gleich geblieben:
 
 ```
-java -jar ../apps/ilivalidator-master/ilivalidator.jar --config ../examples/02/mopublic.toml ../examples/02/mopublic_number_length.xtf
+java -jar ../apps/ilivalidator-master/ilivalidator.jar --config ../examples/02/mopublic.toml ../examples/02/mopublic_errors.xtf
 ```
 
 Bravo, Fehler gefunden aber völlig intransparent/unverständlich für den Menschen: `Constraint1`.
@@ -100,7 +100,7 @@ Bravo, Fehler gefunden aber völlig intransparent/unverständlich für den Mensc
 Fehlermeldung und Constraintname können mittels INTERLIS-Metaattributen gesteuert werden:
 
 ```
-java -jar ../apps/ilivalidator-master/ilivalidator.jar --config ../examples/03/mopublic.toml ../examples/03/mopublic_number_length.xtf
+java -jar ../apps/ilivalidator-master/ilivalidator.jar --config ../examples/03/mopublic.toml ../examples/03/mopublic_errors.xtf
 ```
 
 Resultat sieht doch schon besser aus.
@@ -111,16 +111,16 @@ Im MOpublic-Datenmodell sind die typischen AREA-Geometrien &laquo;nur&raquo; noc
 SET CONSTRAINT INTERLIS.areAreas(ALL, UNDEFINED, >> Geometry);
 ```
 
-Die Prüfung ohne diesen zusätzlichen Constraint liefert keinen Fehler in den Daten.
+Die Prüfung ohne diesen zusätzlichen Constraint liefert keinen zusätzlichen Fehler in den Daten.
 
 ```
-java -jar ../apps/ilivalidator-master/ilivalidator.jar  ../examples/04/mopublic_overlap_surface.xtf
+java -jar ../apps/ilivalidator-master/ilivalidator.jar  ../examples/04/mopublic_errors.xtf
 ```
 
 Jetzt mit zusätzlichen Constraint in unserem Check-Modell. Dafür muss man wieder die Konfigurationsdatei mitliefern.
 
 ```
-java -jar ../apps/ilivalidator-master/ilivalidator.jar  --config ../examples/04/mopublic.toml ../examples/04/mopublic_overlap_surface.xtf
+java -jar ../apps/ilivalidator-master/ilivalidator.jar  --config ../examples/04/mopublic.toml ../examples/04/mopublic_errors.xtf
 ```
 
 Upsi... Nach ein paar Minuten wird kein Fehler gefunden -> [Bug](https://github.com/claeis/ilivalidator/issues/50) im Programm.
@@ -147,11 +147,11 @@ In unserem Check-Modell muss ich, wie bereits erwähnt, mein Funktions-Modell im
 Das Resultat des folgenden Aufrufs listet ein projektiertes Gebäude auf, das älter als drei Jahre ist:
 
 ```
-java -jar ../apps/ilivalidator-master/ilivalidator.jar  --config ../examples/05/mopublic.toml ../examples/05/mopublic_overlap_surface.xtf
+java -jar ../apps/ilivalidator-master/ilivalidator.jar  --config ../examples/05/mopublic.toml ../examples/05/mopublic_errors.xtf
 ```
 
 ### Vergleich mit Referenzdaten
-Momentan trendy sind Abgleiche zwischen der amtlichen Vermessung und dem GWR. In beiden Registern wird der EGID verwaltet. Das ist auch gleichbedeutent mit Widersprüchen. Dank der Erweiterbarkeit kann ich mir jetzt ein INTERLIS-Funktion schreiben, die jeden EGID aus den Daten der amtlichen Vermessung mit einem Referenzdatensatz vergleicht. Nehmen wir mal an - rein hypothetisch -, dass dieser Referenzdatensatz der GWR ist. Am einfachsten gelangt mit mit der swisstopo API an diese Daten. Ist natürlich nicht wirklich das Gelbe vom Ei aber für die Demo reicht es:
+Momentan trendy sind Abgleiche zwischen der amtlichen Vermessung und dem GWR. In beiden Registern wird der EGID verwaltet. Das ist auch gleichbedeutent mit Widersprüchen. Dank der Erweiterbarkeit kann ich mir jetzt eine INTERLIS-Funktion schreiben, die jeden EGID aus den Daten der amtlichen Vermessung mit einem Referenzdatensatz vergleicht. Nehmen wir mal an - rein hypothetisch -, dass dieser Referenzdatensatz der GWR ist. Am einfachsten gelangt mit mit der swisstopo API an diese Daten. Ist natürlich nicht wirklich das Gelbe vom Ei aber für die Demo reicht es:
  
 * [Dokumentation / Beschreibung](https://api3.geo.admin.ch/services/sdiservices.html#find)
 * [Beispiel-Request](https://api3.geo.admin.ch/rest/services/api/MapServer/find?layer=ch.bfs.gebaeude_wohnungs_register&searchText=367267&searchField=egid&returnGeometry=false&contains=false)
@@ -159,7 +159,7 @@ Momentan trendy sind Abgleiche zwischen der amtlichen Vermessung und dem GWR. In
 Programmiert war die neue [INTERLIS-Funktion](https://git.sogeo.services/stefan/ilivalidator-extensions/src/112388c2fbd21466896b78f1cf27390259ae0985/src/ilivalidator-extensions/src/main/java/org.catais.ilivalidator.ext/Check4GWRIoxPlugin.java) rasch. Tricky war hingegen, dass sie zusätzlichen Java-Bibliotheken benötig. _ilivalidator_ muss diese beim Verwenden der Funktion auch finden. Aus diesem Grund muss der Programmaufruf anders sein:
 
 ```
-java -cp  '../apps/ilivalidator-master/ilivalidator.jar:../apps/ilivalidator-master/libs/*:../apps/ilivalidator-master/plugins/*' org.interlis2.validator.Main --config ../examples/06/mopublic.toml  ../examples/06/mopublic_missing_egid.xtf
+java -cp  '../apps/ilivalidator-master-http/ilivalidator.jar:../apps/ilivalidator-master-http/libs/*:../apps/ilivalidator-master-http/plugins/*' org.interlis2.validator.Main --config ../examples/06/mopublic.toml  ../examples/06/mopublic_errors.xtf
 ```
 
 Ich hoffe, dass das grundstätzlich noch eleganter geht. Das Check- und Funktions-Modell habe ich bereits angepasst. Die Prüfung meldet einen unbekannten EGID in den Daten der amtlichen Vermessung.
@@ -176,6 +176,11 @@ Es muss natürlich nicht immer gleich ein Webservice sein den man anzapft. In vi
 * isInteger: "mit Pfad"
 * Bedingungen aus assozierten Objekten: Nutzungstyp ist in Klasse A erfasst. Geometrie in Klasse B. Assoziation zwischen beiden Klassen. Prüfung auf Areas für typ="XXX"
 * elementCount(): von typ=XX darf es genau YY Elemente haben.
+* Ist-/Soll-Möglichkeiten von Views
+* Parameterübergabe durch Benutzer. Wert des Parameters ist in Constraints und Custom Functions verfügbar ("System.xxx")
+* Rückgabewert von Funktionen in Messages
+* Dokumentation der Custom Functions
+* 
 
 
 

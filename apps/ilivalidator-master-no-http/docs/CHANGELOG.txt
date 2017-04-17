@@ -1,0 +1,102 @@
+ilivalidator 1.2.0 (2017-04-xx)
+-----------------------------
+- keep/save last directory of file selector
+
+ilivalidator 1.1.0 (2017-04-05)
+-----------------------------
+- iox-ili 1.16.0-master (2017-04-05)
+- validator: fixed: switching constraint check off
+- validator: fixed: role EXTERNAL handling in cardinality and reference
+- validator: optimized: constraint error messages
+- validator: added: new option --forceTypeValidation
+- validator: added: new option --disableAreaValidation
+
+ilivalidator 1.0.0 (2017-03-10)
+-----------------------------
+- iox-ili 1.14.0-feature/validator1 (2017-03-10)
+- validator: changed API of user defined functions
+- validator: added: validate plausibility constraints
+- validator: added: evaluate user defined functions
+- validator: added: enable user defined error messages
+- validator: added: get message in specific validation if configuration off
+- validator: fixed: unique constraint not checked
+- validator: fixed: custom functions with object collections
+- validator: fixed: missed errors in xtf log file
+- validator: fixed: evaluation of sub-enum constants
+- validator: improved/fixed topology validation
+- validator: optimized: validate external/additional constraint
+- validator: optimized: performance
+
+ilivalidator 0.10.0 (2017-02-10)
+-----------------------------
+- iox-ili 1.14.0-feature/validator1
+- validator: optimized unique TID/OID check
+- validator: added functions len, lenM, trim, trimM, isEnumSubVal, inEnumRange, objectCount(ALL),
+			 objectCount(Role), elementCount, myClass, isOfClass, isSubClass, areArea
+- validator: added handling if function is not yet implemented
+- validator: added set constraints
+- validator: added infoLogs and traceLogs
+- validator: added additional constraints
+
+ilivalidator 0.9.0 (2017-01-13)
+----------------------------------------------
+- iox-ili-1.14.0-feature/validator1
+- validator: optimized unique TID/OID check
+- validator: optimized performance
+- validator: added AREA/SURFACE topology validation
+- validator: added switch off existence, mandatory constraints and return warning instead of alert
+- validator: added switch off attribute cardinality and return warning instead of alert
+- validator: added role handling if role is EXTERNAL
+
+ilivalidator 0.7.0 (2016-12-29)
+----------------------------------------------
+- iox-ili-1.13.7-feature/validator1
+- validator: fixed cardinality fault if ili1.0
+- validator: validate POLYLINE topology
+- validator: optimized object pool
+
+ilivalidator 0.6.0 (2016-12-21)
+----------------------------------------------
+- iox-ili-1.13.6-feature/validator1
+- validator: fixed if cardinality is N, show "*" (UNBOUND) is error message 
+- validator: validate mandatory constraint in NOT, OR, AND, DEFINED, UNDEFINED
+- validator: validate mandatory constraint in ==, !=, <>, <, <=, >, >= of attribute and attribute path
+
+ilivalidator 0.5.0 (2016-12-12)
+-------------------------------
+- iox-ili-1.13.5-feature/validator1
+- validator: fixed OID uniqueness per table in ITF
+
+ilivalidator 0.4.0 (2016-12-01)
+-------------------------------
+- iox-ili-1.13.4-feature/validator1
+- validator: validate unique constraint
+- validator: validate cardinality in associations
+- validator: validate existence constraint
+- validator: validate reference type
+- validator: validate OID/TID uniqueness
+- validator: validate target class in associations
+
+ilivalidator 0.3.0 (2016-09-05)
+-------------------------------
+- iox-ili-1.13.2
+- validator: validate DATE, BOOLEAN, XMLDate, XMLDateTime, XMLTime, UUIDOID
+- validator: validate OID AS UUIDOID
+- validator: added global config section [PARAMTER] with entry validation="off"
+
+ilivalidator 0.2.1 (2016-08-22)
+-------------------------------
+- validator: fix mandatory check if attr type is a domain def
+- iox-ili-1.13.0
+
+ilivalidator 0.2.0 (2016-07-08)
+-------------------------------
+- added localizable GUI
+- read config from ili metaattrs
+- added TextType, NumericType, EnumerationType validation
+- ili2c-4.5.23
+- iox-ili-1.12.0
+
+ilivalidator 0.1.0 (2016-06-15)
+-------------------------------
+- initial coding/release

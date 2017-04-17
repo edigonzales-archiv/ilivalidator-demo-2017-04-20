@@ -16,7 +16,7 @@
       <MOpublic95_ili2_v13.Control_points.Control_point TID="8f3d7a78-3258-437a-a6ed-3fa01fa180f7">
         <Category>2</Category>
         <IdentND>CH0300001107</IdentND>
-        <Number>XX11075350</Number>
+        <Number>9911075350</Number>
         <Geometry>
           <COORD>
             <C1>2611985.735</C1>
@@ -24,7 +24,7 @@
           </COORD>
         </Geometry>
         <Plan_accuracy>1.0</Plan_accuracy>
-        <Geom_alt>584.330</Geom_alt>
+        <Geom_alt>7584.330</Geom_alt>
         <Alt_accuracy>1.5</Alt_accuracy>
         <Mark>0</Mark>
         <State_of>2010-01-07T00:00:00.000</State_of>
@@ -32,7 +32,6 @@
       </MOpublic95_ili2_v13.Control_points.Control_point>
       <MOpublic95_ili2_v13.Control_points.Control_point TID="8755e4de-f082-49e5-92e1-2e2372dfbede">
         <Category>4</Category>
-        <IdentND>SO0200002549</IdentND>
         <Number>25490024</Number>
         <Geometry>
           <COORD>
@@ -24952,60 +24951,6 @@
         <State_of>2000-11-21T00:00:00.000</State_of>
         <FOSNr>2549</FOSNr>
       </MOpublic95_ili2_v13.Land_cover.LCSurface>
-      <MOpublic95_ili2_v13.Land_cover.LCSurface TID="7d9f6094-523e-4990-9079-9aa813410c86">
-        <Geometry>
-          <SURFACE>
-            <BOUNDARY>
-              <POLYLINE>
-                <COORD>
-                  <C1>2611501.426</C1>
-                  <C2>1233927.245</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611509.433</C1>
-                  <C2>1233931.133</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611508.795</C1>
-                  <C2>1233932.446</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611509.725</C1>
-                  <C2>1233935.14</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611512.401</C1>
-                  <C2>1233934.219</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611513.048</C1>
-                  <C2>1233932.888</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611524.49</C1>
-                  <C2>1233938.444</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611530.865</C1>
-                  <C2>1233925.322</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611507.802</C1>
-                  <C2>1233914.123</C2>
-                </COORD>
-                <COORD>
-                  <C1>2611501.426</C1>
-                  <C2>1233927.245</C2>
-                </COORD>
-              </POLYLINE>
-            </BOUNDARY>
-          </SURFACE>
-        </Geometry>
-        <Quality>0</Quality>
-        <Type>0</Type>
-        <State_of>2000-11-21T00:00:00.000</State_of>
-        <FOSNr>2549</FOSNr>
-      </MOpublic95_ili2_v13.Land_cover.LCSurface>
       <MOpublic95_ili2_v13.Land_cover.LCSurface TID="e5de8014-c53a-4d2c-9d03-1ac34763f7d1">
         <Geometry>
           <SURFACE>
@@ -25648,6 +25593,60 @@
                 <COORD>
                   <C1>2611489.777</C1>
                   <C2>1233941.239</C2>
+                </COORD>
+              </POLYLINE>
+            </BOUNDARY>
+          </SURFACE>
+        </Geometry>
+        <Quality>0</Quality>
+        <Type>0</Type>
+        <State_of>2000-11-21T00:00:00.000</State_of>
+        <FOSNr>2549</FOSNr>
+      </MOpublic95_ili2_v13.Land_cover.LCSurface>
+      <MOpublic95_ili2_v13.Land_cover.LCSurface TID="7d9f6094-523e-4990-9079-9aa813410c86">
+        <Geometry>
+          <SURFACE>
+            <BOUNDARY>
+              <POLYLINE>
+                <COORD>
+                  <C1>2611501.426</C1>
+                  <C2>1233927.245</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611509.433</C1>
+                  <C2>1233931.133</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611508.795</C1>
+                  <C2>1233932.446</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611509.725</C1>
+                  <C2>1233935.14</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611512.401</C1>
+                  <C2>1233934.219</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611513.048</C1>
+                  <C2>1233932.888</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611525.183842287</C1>
+                  <C2>1233940.2942460973</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611530.865</C1>
+                  <C2>1233925.322</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611507.802</C1>
+                  <C2>1233914.123</C2>
+                </COORD>
+                <COORD>
+                  <C1>2611501.426</C1>
+                  <C2>1233927.245</C2>
                 </COORD>
               </POLYLINE>
             </BOUNDARY>
