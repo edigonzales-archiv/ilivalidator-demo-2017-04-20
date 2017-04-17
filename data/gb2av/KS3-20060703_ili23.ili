@@ -1,0 +1,389 @@
+INTERLIS 2.3;
+
+/** Dieses Datenmodell beschreibt die auszutauschenden Daten zwischen "Grundbuch" und "Amtliche Vermessung".
+ * Das Datenmodell ist in vier Themen (Gruppen bzw. Pakete) unterteilt, einerseits um den rechtsgültigen Teil vom provisorischen zu trennen, und andererseits um die Datenhoheit (Grundbuch oder Amtliche Vermessung) zu respektieren.
+ * @Version 2006-07-03
+ * @Author ceis
+ */
+ /**
+ * ILI2.3 2017-02-16 / Stefan Ziegler
+ */
+CONTRACTED MODEL GB2AV (de) AT "http://cadastre.ch" 
+  VERSION "2017-02-16" =
+  
+  IMPORTS UNQUALIFIED INTERLIS;
+
+  !!@ilivalid.impl.java=org.catais.ilivalidator.ext.IsInteger
+  FUNCTION isInteger (number: NUMERIC): BOOLEAN;
+  !!FUNCTION isInteger (bag: BAG OF ANYSTRUCTURE): BOOLEAN;
+  
+  !!@ilivalid.impl.java=org.catais.ilivalidator.ext.IsOlderThanToday
+  FUNCTION isOlderThanToday (date: TEXT): BOOLEAN; 
+  
+  UNIT
+
+    Area (ABSTRACT) = (INTERLIS.LENGTH * INTERLIS.LENGTH);
+
+  DOMAIN
+
+    BBArt= (
+      Gebaeude
+      ,befestigt(
+        Strasse_Weg
+        ,Trottoir
+        ,Verkehrsinsel
+        ,Bahn
+        ,Flugplatz
+        ,Wasserbecken
+        ,uebrige_befestigte
+      )
+      ,humusiert(
+        Acker_Wiese_Weide
+        ,Intensivkultur(
+          Reben
+          ,uebrige_Intensivkultur
+        )
+        ,Gartenanlage
+        ,Hoch_Flachmoor
+        ,uebrige_humusierte
+      )
+      ,Gewaesser(
+        stehendes
+        ,fliessendes
+        ,Schilfguertel
+      )
+      ,bestockt(
+        geschlossener_Wald
+        ,Wytweide(
+          Wytweide_dicht
+          ,Wytweide_offen
+        )
+        ,uebrige_bestockte
+      )
+      ,vegetationslos(
+        Fels
+        ,Gletscher_Firn
+        ,Geroell_Sand
+        ,Abbau_Deponie
+        ,uebrige_vegetationslose
+      )
+    );
+
+    Datum= TEXT*10;
+
+    GrundstuecksArtAV= (
+      Liegenschaft
+      ,SelbstRecht(
+        Baurecht
+        ,Quellenrecht
+        ,Konzessionsrecht
+        ,weitere
+      )
+      ,Bergwerk
+    );
+
+    GrundstuecksArtGB= (
+      Liegenschaft
+      ,Konzession
+      ,selbstdauerndesRecht
+      ,MitEigAnteil(
+        Stockwerk
+        ,weitere
+      )
+      ,KantonaleArt
+    );
+
+    GWR_EGID= 1..999999999;
+
+    NBIdentAV= TEXT*12;
+
+  STRUCTURE Flurname =
+    Name : MANDATORY TEXT*40;
+  END Flurname;
+
+  STRUCTURE Gemeinde =
+    Name : MANDATORY TEXT*30;
+    BFSNr : MANDATORY 1..9999;
+  END Gemeinde;
+
+  STRUCTURE GrundstueckNummer =
+    EGRID : TEXT*14;
+    Nummer : MANDATORY TEXT*12;
+    NummerZusatz : TEXT*12;
+    Amt : TEXT*3;
+    SubKreis : TEXT*15;
+    Los : TEXT*15;
+  END GrundstueckNummer;
+
+  UNIT
+
+    Square_Meter [m2] EXTENDS Area = (INTERLIS.m * INTERLIS.m);
+
+  STRUCTURE GBPlan =
+    Nummer : MANDATORY TEXT*12;
+    NBIdent : MANDATORY NBIdentAV;
+  END GBPlan;
+
+  STRUCTURE GebaeudeeingangAdresse =
+    Strasse : TEXT*60;
+    Hausnummer : TEXT*12;
+    GebaeudeBezeichnung : TEXT*60;
+    BenanntesGebiet : TEXT*60;
+    PLZ : MANDATORY 1000..9999;
+    PlzZusatzziffern : 0..99;
+    Ortschaft : MANDATORY TEXT*40;
+    GWR_EGID : GWR_EGID;
+    GWR_EDID : 0..99;
+  END GebaeudeeingangAdresse;
+
+  STRUCTURE MutationsNummer =
+    Nummer : MANDATORY TEXT*12;
+    NBIdent : MANDATORY NBIdentAV;
+  END MutationsNummer;
+
+  DOMAIN
+
+    Flaeche= 0.0..1000000000.0 [m2];
+    FlaechenKorrektur= -10000.0..10000.0 [m2];
+
+  TOPIC Eigentumsverhaeltnis =
+
+    CLASS Eigentum(ABSTRACT) =
+      AnteilZaehler : 1..1000000000;
+      AnteilNenner : 1..1000000000;
+      Bemerkungen : TEXT*200;
+    END Eigentum;
+
+    CLASS Grundstueck =
+      Art : GB2AV.GrundstuecksArtGB;
+      Nummer : MANDATORY GB2AV.GrundstueckNummer;
+      UNIQUE Nummer->Nummer, Nummer->NummerZusatz, Nummer->Amt, Nummer->SubKreis, Nummer->Los;
+    END Grundstueck;
+
+    CLASS Person =
+      Art : (
+        Gemeinschaft(
+          EinfacheGesellschaft
+          ,KollektiveGesellschaft
+          ,Kommanditgesellschaft
+          ,Guetergemeinschaft
+          ,Erbengemeinschaft
+          ,weitere
+        )
+        ,natuerlichePerson
+        ,juristischePerson(
+          Aktiengesellschaft
+          ,Kommanditaktiengesellschaft
+          ,GmbH
+          ,Genossenschaft
+          ,Verein
+          ,Stiftung
+          ,weitere
+        )
+      );
+      Name : MANDATORY TEXT*200;
+      Vorname : TEXT*30;
+      Strasse : TEXT*60;
+      Hausnummer : TEXT*12;
+      GebaeudeBezeichnung : TEXT*60;
+      Ortsteil : TEXT*60;
+      PLZ : TEXT*15;
+      Ortschaft : TEXT*40;
+      Land : TEXT*20;
+      Geburtsjahr : 1880..2100;
+      Geburtsmonat : 1..12;
+      Geburtstag : 1..31;
+      ZusatzinformationEmpfaenger : TEXT*40;
+      PostDienstleistung : TEXT*30;
+      Geschlecht : (
+        maennlich
+        ,weiblich
+      );
+      Sitz : TEXT*40;
+      EPID : TEXT*20;
+      UID : TEXT*20;
+    END Person;
+
+    CLASS RechtGrundstueck
+    EXTENDS Eigentum =
+      SubjektivDinglich : MANDATORY BOOLEAN;
+    END RechtGrundstueck;
+
+    CLASS RechtPerson
+    EXTENDS Eigentum =
+      Art : (
+        AlleinEigentum
+        ,MitEigentum
+        ,GesamtEigentum
+        ,Herrenlos
+      );
+    END RechtPerson;
+
+    ASSOCIATION betroffenesGrundstueckRecht =
+      betroffenesGrundstueck -<#> {1} Grundstueck;
+      Recht -- {0..*} Eigentum;
+    END betroffenesGrundstueckRecht;
+
+    ASSOCIATION GemeinschaftTeilhaber =
+      Gemeinschaft -- {0..*} Person;
+      Teilhaber -- {0..*} Person;
+    END GemeinschaftTeilhaber;
+
+    ASSOCIATION BerechtigterRecht =
+      Berechtigter -- {0..1} Person;
+      Grundstueck -- {0..*} RechtPerson;
+    END BerechtigterRecht;
+
+    ASSOCIATION berechtigtesGrundstueckRecht =
+      berechtigtesGrundstueck -- {1} Grundstueck;
+      belastetesGrundstueck -- {0..*} RechtGrundstueck;
+    END berechtigtesGrundstueckRecht;
+
+  END Eigentumsverhaeltnis;
+
+  TOPIC Grundstuecksbeschrieb =
+
+    CLASS AVBemerkung =
+      Art : MANDATORY (
+        StreitigeGrenze
+        ,Lagefixpunkt
+        ,Naturdenkmal
+        ,eingedoltesGewaesser
+        ,andere
+      );
+      AndereArt : TEXT*20;
+      Bemerkung : TEXT*200;
+    END AVBemerkung;
+
+    STRUCTURE BodbdAnteil =
+      Art : MANDATORY GB2AV.BBArt;
+      Flaechenmass : MANDATORY GB2AV.Flaeche;
+      ArtBezeichnung : TEXT*40;
+    END BodbdAnteil;
+
+    CLASS Gebaeude =
+      GWR_EGID : GB2AV.GWR_EGID;
+      istProjektiert : MANDATORY BOOLEAN;
+      istUnterirdisch : MANDATORY BOOLEAN;
+      Nummer : TEXT*12;
+      Gebaeudeart : TEXT*30;
+      GebaeudeartCode : TEXT*4;
+      Flaechenmass : MANDATORY GB2AV.Flaeche;
+      Adresse : BAG {0..*} OF GB2AV.GebaeudeeingangAdresse;
+    END Gebaeude;
+
+    CLASS Grundstueck(ABSTRACT) =
+      Flaechenmass : GB2AV.Flaeche;
+      GrundstueckArt : GB2AV.GrundstuecksArtAV;
+      KantonaleUnterArt : TEXT*60;
+      Gemeinde : MANDATORY GB2AV.Gemeinde;
+      letzteVollzogeneMutation : GB2AV.MutationsNummer;
+      Nummer : MANDATORY GB2AV.GrundstueckNummer;
+      GBPlaene : BAG {1..*} OF GB2AV.GBPlan;
+      Flurnamen : BAG {0..*} OF GB2AV.Flurname;
+      UNIQUE Nummer->Nummer, Nummer->NummerZusatz, Nummer->Amt, Nummer->SubKreis, Nummer->Los;
+    END Grundstueck;
+
+    CLASS Flaeche
+    EXTENDS Grundstueck =
+      MANDATORY CONSTRAINT GrundstueckArt!=#Liegenschaft;
+    END Flaeche;
+
+    CLASS Liegenschaft
+    EXTENDS Grundstueck =
+      BodbdAnteil : BAG {0..*} OF BodbdAnteil;
+      UNIQUE (LOCAL) BodbdAnteil : Art;
+      MANDATORY CONSTRAINT GrundstueckArt==#Liegenschaft;
+    END Liegenschaft;
+
+    ASSOCIATION AVBemerkungGrundstueck =
+      AVBemerkung -- {0..*} AVBemerkung;
+      Grundstueck -<> {1..*} Grundstueck;
+    END AVBemerkungGrundstueck;
+
+    ASSOCIATION GrundstueckGebaeude =
+      Gebaeude -- {0..*} Gebaeude;
+      Grundstueck -<> {1..*} Grundstueck;
+      Flaechenmass : MANDATORY GB2AV.Flaeche;
+    END GrundstueckGebaeude;
+
+    ASSOCIATION Anteil =
+      flaeche -- {0..*} Flaeche;
+      liegt_auf -- {0..*} Grundstueck;
+      Flaechenmass : GB2AV.Flaeche;
+    END Anteil;
+
+  END Grundstuecksbeschrieb;
+
+  TOPIC Vollzugsgegenstaende =
+
+    CLASS Vollzugsgegenstand =
+      Status : MANDATORY (
+        Eingangsmeldung
+        ,Eintrag
+        ,Abweisung
+      );
+      Bemerkungen : TEXT*200;
+      GrundbuchEintrag : GB2AV.Datum;
+      TagebuchEintrag : TEXT*20;
+      TagebuchBeleg : TEXT*20;
+      Mutationsnummer : MANDATORY GB2AV.MutationsNummer;
+    END Vollzugsgegenstand;
+
+  END Vollzugsgegenstaende;
+
+  TOPIC Mutationstabelle
+  EXTENDS GB2AV.Grundstuecksbeschrieb =
+
+    STRUCTURE Abschnitt =
+      Flaechenmass : MANDATORY GB2AV.Flaeche;
+      von : MANDATORY GB2AV.GrundstueckNummer;
+    END Abschnitt;
+
+    CLASS AVBemerkung(EXTENDED) =
+    END AVBemerkung;
+
+    CLASS AVMutation =
+      Beschrieb : TEXT*50;
+      DateinamePlan : TEXT*80;
+      EndeTechnBereit : MANDATORY GB2AV.Datum;
+      istProjektMutation : MANDATORY (
+        Projekt
+        ,Normal
+        ,Abschluss
+      );
+      MutationsNummer : MANDATORY GB2AV.MutationsNummer;
+      geloeschteGrundstuecke : BAG {0..*} OF GB2AV.GrundstueckNummer;
+      UNIQUE MutationsNummer->Nummer, MutationsNummer->NBIdent;
+      !!MANDATORY CONSTRAINT isOlderThanToday(EndeTechnBereit);      
+    END AVMutation;
+
+    CLASS AVMutationsAnnulation =
+      Bemerkungen : TEXT*200;
+      MutationsNummer : MANDATORY GB2AV.MutationsNummer;
+      UNIQUE MutationsNummer->Nummer, MutationsNummer->NBIdent;
+    END AVMutationsAnnulation;
+
+    CLASS Flaeche(EXTENDED) =
+      Korrektur : GB2AV.FlaechenKorrektur;
+      korrigiertesFlaechenmass : GB2AV.Flaeche;
+    END Flaeche;
+
+    CLASS Liegenschaft(EXTENDED) =
+      Korrektur : GB2AV.FlaechenKorrektur;
+      korrigiertesFlaechenmass : GB2AV.Flaeche;
+      Zugang : BAG {0..*} OF Abschnitt;
+      MANDATORY CONSTRAINT isInteger(Flaechenmass);
+      MANDATORY CONSTRAINT isInteger(Korrektur);
+      MANDATORY CONSTRAINT isInteger(korrigiertesFlaechenmass);
+      !!MANDATORY CONSTRAINT isInteger(Zugang);
+    END Liegenschaft;
+
+    ASSOCIATION AVMutationBetroffeneGrundstuecke =
+      AVMutation -<#> {0..1} AVMutation;
+      betroffeneGrundstuecke -- {0..*} GB2AV.Grundstuecksbeschrieb.Grundstueck;
+    END AVMutationBetroffeneGrundstuecke;
+
+  END Mutationstabelle;
+
+END GB2AV.

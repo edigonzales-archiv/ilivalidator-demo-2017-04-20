@@ -1,0 +1,10 @@
+INTERLIS 2.2;
+
+MODEL SO_FunctionsExt22 (en) =
+
+  !!FUNCTION mySubText (text: TEXT; from: NUMERIC; to: NUMERIC): TEXT;
+  !!FUNCTION ageYears (date: TEXT): NUMERIC;
+  !!FUNCTION check4GWR (egid: NUMERIC): BOOLEAN;
+  FUNCTION isInteger (number: NUMERIC): BOOLEAN;
+
+END SO_FunctionsExt22.

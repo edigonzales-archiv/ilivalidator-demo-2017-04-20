@@ -1,0 +1,28 @@
+INTERLIS 2.3;
+
+CONTRACTED MODEL GB2AV (de) AT "http://sogeo.services"
+  VERSION "2017-04-07" =
+  IMPORTS GB2AV;
+  IMPORTS SO_FunctionsExt;
+ 
+  VIEW TOPIC Mutationstabelle_Check =
+  DEPENDS ON GB2AV.Mutationstabelle;
+
+    VIEW v_AVMutation
+    	PROJECTION OF GB2AV.Mutationstabelle.AVMutation;
+    =
+      ALL OF AVMutation;
+      !! Constraint name will not be shown if ilivalid.msg is defined!?
+      !!@ name = Punktnummer_Laenge
+      !!@ ilivalid.msg = "Laenge der Punktenummer {Number} ist falsch. Erwartet wird 8."
+      MANDATORY CONSTRAINT (INTERLIS.len (Number)) == 8;
+      !!@ ilivalid.msg = "Laenge der BfS-Nummer {FOSNr} ist falsch. Erwartet wird 4."
+      MANDATORY CONSTRAINT (INTERLIS.len (FOSNr)) == 4;
+      !!@ name = BfS_Nummer_erste_Ziffer
+      !!@ ilivalid.msg = "Erste Ziffer der BfS-Nummer {FOSNr} ist falsch. Erwartet wird 2."
+      MANDATORY CONSTRAINT SO_FunctionsExt.mySubText(FOSNr,"0","1") == "2";
+    END v_AVMutation;
+    
+  END Mutationstabelle_Check;
+
+END GB2AV.

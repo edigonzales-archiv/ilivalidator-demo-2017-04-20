@@ -177,7 +177,7 @@ Es muss natürlich nicht immer gleich ein Webservice sein den man anzapft. In vi
 * Bedingungen aus assozierten Objekten: Nutzungstyp ist in Klasse A erfasst. Geometrie in Klasse B. Assoziation zwischen beiden Klassen. Prüfung auf Areas für typ="XXX"
 * elementCount(): von typ=XX darf es genau YY Elemente haben.
 * Ist-/Soll-Möglichkeiten von Views
-* Parameterübergabe durch Benutzer. Wert des Parameters ist in Constraints und Custom Functions verfügbar ("System.xxx")
+* Parameterübergabe durch Benutzer. Wert des Parameters ist in Constraints und Custom Functions verfügbar (e.g. -D System Properties)
 * Rückgabewert von Funktionen in Messages
 * Dokumentation der Custom Functions
 * 
